@@ -533,14 +533,14 @@
 
 
 	关键字传递
-
+	
 	```python
 	def stu_info(**kwargs):
 	    print(kwargs)
 	stu_info(name="zyh",age=19,gender="male")
 	#key value对被接收组成字典
 	```
-
+	
 	---
 
 #### 函数作为参数传递
@@ -609,16 +609,233 @@ file1 = open('py.txt','r',encoding = 'UTF-8')
 
 `read（）`
 
-1. `file.read(num)`
-	num表示 要从文件中读取的数据的长度（单位是字节），默认读取全部数据
+- `file.read(num)`
+  num表示 要从文件中读取的数据的长度（单位是字节），默认读取全部数据
+  下一个 `read`会从上一次结尾继续
 
 
 
+`readlines()`
+
+- 按照行的方式把整个文件的内容一次性读取，返回一个列表，一行数据为一个元素
 
 
 
+`readline()`
+
+- 一次读取一行内容
+
+for循环读取文件行
+
+```python
+for line in open("nihao.txt",'r'):
+    print(line)
+```
 
 
+
+`close()`
+
+
+
+`with open("file","r") as f` 
+
+- with可以自动关闭
+
+
+
+---
+
+##### 4.2.2 文件的写入操作
+
+1. 打开
+	`f = open("file","w")`
+2. 读写
+	`f.write("nihao!") ` 文件此时在缓冲区类似 `git add`
+	`f.flush()` 真正写入文件（类似 `git commit -m`）
+3. 关闭
+
+---
+
+##### 4.2.3 文件的追加操作
+
+类似，不过是在末尾追加新的内容
+
+---
+
+
+
+### 5、Python异常
+
+所谓BUG
+
+#### 5.1 捕获异常
+
+对BUG进行提醒，整个程序继续运行
+
+基本语法：
+
+```python
+try:
+    可能发生错误的代码
+except:
+    如果出现异常执行的代码
+#可以捕获所有异常
+```
+
+捕获特定的异常：
+
+```python
+try:
+    # 可能会引发 ZeroDivisionError 或 TypeError 的代码
+    result = 10 / 0
+except (ZeroDivisionError, TypeError) as e:
+    print("出现了除零或类型错误：", e)
+
+```
+
+若无异常，可写 `else`
+
+`finally` 无论是否发生异常都会执行。它常用于清理资源，比如关闭文件、释放网络连接等
+
+```python
+try:
+    f = open("example.txt", "r")
+    content = f.read()
+except FileNotFoundError as e:
+    print("文件未找到：", e)
+else:
+    print("文件内容：", content)
+finally:
+    f.close()
+    print("文件已关闭。")
+
+```
+
+---
+
+#### 5.2 异常的传递
+
+异常的传递（也称为异常的传播或异常的传播机制）指的是在 Python 中，当一个异常没有在当前函数或代码块内被处理时，它会沿着函数调用栈向上“传播”，直到找到可以处理它的 `except` 块，或者直到传播到程序的最外层。 如果没有被任何地方捕获，程序就会终止并输出错误信息
+
+```python
+def function_a():
+    print("在 function_a 中")
+    raise ValueError("这是来自 function_a 的异常")
+
+def function_b():
+    print("在 function_b 中")
+    function_a()  # 调用 function_a，会抛出异常
+
+def function_c():
+    print("在 function_c 中")
+    function_b()  # 调用 function_b，会继续传播异常
+
+try:
+    function_c()
+except ValueError as e:
+    print(f"捕获到异常：{e}")
+```
+
+>**`function_c`** 调用了 **`function_b`**。
+>
+>**`function_b`** 调用了 **`function_a`**，并在 **`function_a`** 内抛出了 `ValueError` 异常。
+>
+>异常没有在 **`function_a`** 内部被捕获，它会沿着调用栈向上传递，直到传递到 **`function_b`**。
+>
+>在 **`function_b`** 中，异常没有被处理，于是它继续向上传递，传递到 **`function_c`**。
+>
+>在 **`function_c`** 中，异常仍然没有被捕获，最终它被传递到外层的 `try...except` 块，成功被捕获并打印异常信息
+
+##### 异常传播的规则
+
+- **异常自下而上传播**：当在一个函数中抛出异常时，Python 会将其传播到调用它的地方。如果这个调用的函数没有处理异常，它会继续向上传播，直到找到处理该异常的 `except` 块。
+
+- **调用栈的顺序**：异常会沿着调用栈依次向外传播，即先抛出的异常在栈底，最终捕获的 `except` 块在栈顶。
+
+- **异常处理的优先级**：如果在多个地方可以捕获异常，Python 会按从内到外的顺序查找，直到找到一个匹配的 `except` 块
+
+---
+
+### 6、模块
+
+模块是一个 .py 文件，能够定义函数类和变量，也包含代码
+
+作用：
+快速实现一些功能，可以理解为一个工具包
+
+#### 6.1 模块的导入方式
+
+常见方式：
+
+1. **导入整个模块**
+
+	使用 `import` 语句导入整个模块后，需要通过模块名来访问其中的函数、类或变量。这种方式有助于避免命名冲突。
+
+	```python
+	import math
+	result = math.sqrt(16)
+	print(result)  # 输出：4.0
+	```
+
+2. **导入模块中的特定内容**
+
+	如果只需要模块中的某个函数、类或变量，可以使用 `from ... import ...` 语法。这种方式可以直接使用导入的内容，无需模块名前缀。
+
+	```python
+	from math import sqrt
+	result = sqrt(16)
+	print(result)  # 输出：4.0
+	```
+
+3. **导入模块并重命名**
+
+	使用 `import ... as ...` 语法，可以为导入的模块指定一个别名。这在模块名较长或避免命名冲突时非常有用。
+
+	```python
+	import numpy as np
+	array = np.array([1, 2, 3])
+	print(array)
+	```
+
+4. **导入模块中的所有内容**
+
+	使用 `from ... import *` 语法，可以将模块中的所有非私有成员导入到当前命名空间。这种方式可能导致命名冲突，因此不推荐在大型项目中使用。
+
+	```python
+	from math import *
+	result = sqrt(16)
+	print(result)  # 输出：4.0
+	```
+
+5. **使用 `importlib` 动态导入模块**
+
+	Python 的 `importlib` 模块提供了在运行时导入模块的功能。这对于需要根据字符串名称导入模块的场景非常有用。
+
+	```python
+	import importlib
+	math = importlib.import_module('math')
+	result = math.sqrt(16)
+	print(result)  # 输出：4.0
+	```
+
+**注意事项：**
+
+- **命名空间管理**：使用 `import` 导入整个模块时，模块名作为命名空间，可以避免与当前命名空间中的名称冲突。使用 `from ... import ...` 导入特定内容时，需要注意可能的命名冲突。
+- **导入顺序**：PEP 8 建议将导入分为三部分，按顺序排列：标准库导入、第三方库导入和本地应用/库导入，并且每部分之间用空行分隔。
+- **避免使用 `from ... import \*`**：这种方式会将模块中的所有非私有成员导入到当前命名空间，可能导致命名冲突，降低代码可读性和维护性。
+
+选择适当的导入方式，有助于提高代码的可读性、可维护性和避免潜在的错误
+
+
+
+#### 6.2 自定义模块
+
+- **创建模块**：将相关代码放入一个 `.py` 文件中。
+
+- **导入模块**：使用 `import` 语句在其他文件中导入模块。
+
+- **使用模块**：通过 `模块名.函数名` 或 `from 模块名 import 函数名` 的方式使用模块中的功能
 
 
 
