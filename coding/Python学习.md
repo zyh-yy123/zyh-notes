@@ -933,4 +933,49 @@ except ValueError as e:
 >- **OpenCV**：用于计算机视觉任务，提供丰富的图像处理功能
 >- **PyGame**：用于开发视频游戏的库，提供图像、声音和输入处理功能
 >
->
+
+
+
+---
+
+### 8、可视化
+
+#### 8.1 json数据格式的转换
+
+**什么是json**
+
+- 一种轻量级的数据交互格式，可以按照指定的格式去组织和封装数据
+- 本质上是一个带有特定格式的字符串
+- 负责不同编程语言中的数据传递和交互
+
+相互转换：
+
+```python
+import json
+data = [{"name":"zyh","age":19},{"name":"aaa","age":111}]
+data = json.dumps(data)#py转json
+data = json.loads(data)#json转py
+```
+
+
+
+如果有中文可以加上`ensure_ascii=False` 来确保中文正常转换
+
+---
+
+#### 8.2 pyecharts入门
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
