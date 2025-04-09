@@ -967,13 +967,74 @@ data = json.loads(data)#json转py
 
 
 
+先欠着后面来补
 
 
 
+### 9、类和对象
+
+定义：
+
+成员变量&成员函数
+
+```python
+class Student:
+    def __init__(self, name , age ):
+        self.name = name
+        self.age = age
+    def greet(self):
+        print( f"你好，我是{self.name},刚满{self.age}岁)
+```
+
+成员方法的定义：
+
+```python
+def F_Name(self,形参1，形参2......):
+    方法体
+```
+
+#### 9.1 self
+
+在 Python 中，`self` 就是对当前实例对象的引用，是你在实例方法中“跟自己打招呼”的方式。每当你调用一个实例方法时，Python 会自动把这个实例传递给方法中的 `self` 参数，从而让你可以通过 `self` 访问和修改对象的属性，或者调用其他方法。虽然 `self` 只是一个约定，并非 Python 的关键字，但它帮助你把每个对象的数据和行为组织在一起，就像每个人都有一个专属的身份证一样，让代码既清晰又易于维护
 
 
 
+#### 9.2 魔术方法
 
+##### `__str__方法`
+
+当使用 `str()` 函数或 `print()` 打印对象时，会调用该方法以获得一个面向用户、易于阅读的字符串表示
+
+```python
+class Stu():
+
+    def __init__(self,name,major):
+
+        self.name = name
+
+        self.major = major
+
+    def __str__(self):
+
+        return f"{self.name},{self.major}"
+zyh = Stu("zyh","cs")
+
+print(zyh)
+```
+
+
+
+##### `__lt__方法`
+
+
+
+##### `__eq__方法`
+
+比较两个对象是否相等
+
+
+
+#### 9.3 封装
 
 
 
